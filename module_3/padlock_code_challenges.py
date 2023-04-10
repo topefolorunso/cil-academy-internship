@@ -25,9 +25,10 @@ def padlock_code_challenge_2():
 
     for digit1 in range(0,10):
       for digit2 in range(0,10):
-        for digit3 in range(0,10):
-          if digit1<digit2 and digit2<digit3:
-            code += 1
+        if digit1 < digit2:
+            for digit3 in range(0,10):
+                if digit2<digit3:
+                    code += 1
 
     return code
 
