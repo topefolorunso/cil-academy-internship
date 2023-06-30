@@ -11,7 +11,7 @@ def padlock_code_challenge_1():
 
     return code
 
-
+# DRY - Don't Repeat Yourself
 
 def padlock_code_challenge_2():
     '''
