@@ -1,0 +1,47 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Simple SQS example"
+Parameters:
+  QueueName:
+    Type: String
+    Default: TheQueue2
+    Description: Please enter the name of the Queue.
+
+Resources:
+  TheQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref QueueName
+
+  TheQueueUpdaterRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - 
+            Effect: Allow
+            Principal:
+              Service:
+              - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'      
+      Policies:
+        -
+          PolicyName: QueueUpdater
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - 
+                Effect: Allow
+                Action: 
+                  - sqs:Get*
+                  - sqs:List*
+                  - sqs:SendMessage*
+                  - sqs:ReceiveMessage
+                Resource: !GetAtt TheQueue.Arn
+Outputs:
+  QueueUrl:
+    Value: !Ref TheQueue
+  QueueARN:
+    Value: !GetAtt  TheQueue.Arn
