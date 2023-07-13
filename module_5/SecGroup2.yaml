@@ -1,0 +1,17 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Security group example"
+Resources:
+  SecGroup1:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Security Group 2
+      GroupName: SG2
+      SecurityGroupIngress:
+        -
+          Description: SSH from SG1
+          FromPort: 22
+          ToPort: 22
+          IpProtocol: tcp
+          SourceSecurityGroupName: SG1
+

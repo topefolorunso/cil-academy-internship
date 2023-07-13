@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'EC2 in public subnet'
+# Metadata: 
+
+# Parameters: 
+
+# Mappings: 
+
+# Conditions: 
+
+Resources: 
+  parisVPC:
+    Type: AWS::EC2::VPC
+    Properties: 
+      CidrBlock: 10.192.0.0/16
+      Tags: 
+        - Key: owner
+          Value: topefolorunso
+
+  publicParisSubnet:
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AvailabilityZone: us-east-1a
+      CidrBlock: 10.192.10.0/24
+      MapPublicIpOnLaunch: true
+      Tags: 
+        - Key: owner
+          Value: topefolorunso
+      VpcId: !Ref parisVPC
+
+  publicSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: "allow ssh for instances in public subnet"
+      GroupName: public-sg
+      SecurityGroupIngress: 
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: TCP
+          FromPort: 22
+          ToPort: 22
+      Tags: 
+        - Key: owner
+          Value: topefolorunso
+      VpcId: !Ref parisVPC
+
+  localKeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties: 
+      KeyName: localKeyPair
+      Tags: 
+        - Key: owner
+          Value: topefolorunso
+
+  publicInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref localKeyPair
+      # DisableApiTermination: true
+      ImageId: ami-019fba393241c7429
+      InstanceType: t2.micro
+      SecurityGroupIds:
+        - !Ref publicSecurityGroup
+      SubnetId: !Ref publicParisSubnet
+      Tags:
+        - Key: owner
+          Value: topefolorunso
+
+Outputs:
+  keyPairPemFile:
+    Description: "the private key for the key pair"
+    Value: !GetAtt localKeyPair.KeyFingerprint

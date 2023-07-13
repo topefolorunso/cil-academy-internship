@@ -1,0 +1,9 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Security group example"
+Resources:
+  SecGroup1:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Security Group 1
+      GroupName: SG1
